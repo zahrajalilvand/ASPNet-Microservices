@@ -1,12 +1,11 @@
-﻿using Catalog.API.Data;
-using Catalog.API.Entities;
+﻿using Catalog.API.Entities;
 using Catalog.API.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Catalog.API.Controller
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
@@ -21,11 +20,33 @@ namespace Catalog.API.Controller
         }
         #endregion
 
-        #region get product
+        #region Get Product
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Products>>> GetProducts()
         {
-            return  0;
+            var product = await _productRepository.GetProducts();
+            return Ok(product);
         }
         #endregion
+
+        #region Get Product By Id
+        [HttpGet("{id:length(24)}", Name ="GetProduct")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Products>>> GetProducts(string Id)
+        {
+            var product = await _productRepository.GetProducts(Id);
+
+            if (product == null)
+            {
+                _logger.LogError($"Product Id: {Id} is not found.");
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
+        #endregion
+
     }
 }
