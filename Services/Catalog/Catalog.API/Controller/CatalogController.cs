@@ -48,5 +48,55 @@ namespace Catalog.API.Controller
         }
         #endregion
 
+        #region Get Product By Category
+        [HttpGet("[action/{category}]")]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Products>>> GetByCategory(string categoryName)
+        {
+            var product = await _productRepository.GetByCategory(categoryName);
+
+            return Ok(product);
+        }
+        #endregion
+
+        #region Get Product By Name
+        [HttpGet("[action/{Name}]")]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Products>>> GetByName(string name)
+        {
+            var product = await _productRepository.GetByName(name);
+
+            return Ok(product);
+        }
+        #endregion
+
+        #region Create Product
+        [HttpPost]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Products>> CreateProduct([FromBody] Products products)
+        {
+            await _productRepository.CreateProduct(products);
+
+            return CreatedAtRoute("GetProducts", new { id = products.Id }, products);
+        }
+        #endregion
+
+        #region Update Product
+        [HttpPut]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateProduct([FromBody] Products products)
+        {
+            return Ok(await _productRepository.UpdateProduct(products));
+        }
+        #endregion
+
+        #region Delete Product
+        [HttpDelete("{id:length(24)}")]
+        [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteProduct(string id)
+        {
+            return Ok(await _productRepository.DeleteProduct(id));
+        }
+        #endregion
     }
 }
