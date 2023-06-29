@@ -31,7 +31,7 @@ namespace Catalog.API.Controller
         #endregion
 
         #region Get Product By Id
-        [HttpGet("{id:length(24)}", Name ="GetProduct")]
+        [HttpGet("{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Products>>> GetProducts(string Id)
@@ -49,18 +49,17 @@ namespace Catalog.API.Controller
         #endregion
 
         #region Get Product By Category
-        [HttpGet("[action/{category}]")]
+        [HttpGet("[action]/{category}")]
         [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Products>>> GetByCategory(string categoryName)
+        public async Task<ActionResult<IEnumerable<Products>>> GetByCategory(string category)
         {
-            var product = await _productRepository.GetByCategory(categoryName);
-
+            var product = await _productRepository.GetByCategory(category);
             return Ok(product);
         }
         #endregion
 
         #region Get Product By Name
-        [HttpGet("[action/{Name}]")]
+        [HttpGet("[action]/{Name}")]
         [ProducesResponseType(typeof(IEnumerator<Products>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Products>>> GetByName(string name)
         {
